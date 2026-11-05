@@ -317,7 +317,20 @@ class RenaultEVCenter extends IPSModule
             $this->SetValue('TripHistory', json_encode($state['trips'], JSON_THROW_ON_ERROR));
             $this->SetValue('ChargeHistory', json_encode($state['charges'], JSON_THROW_ON_ERROR));
             $this->SetValue('LastUpdate', $now);
-            $this->message($cloudError !== '' ? 'Lokale Daten OK / Renault: ' . $cloudError
+            $warnings = [];
+            if ($odo === null) {
+                $warnings[] = 'Kein Kilometerstand vorhanden. Renault-Cockpit-Abfrage oder SourceMileage prüfen.';
+            } elseif ($state['lastOdo'] !== null && !is_array($state['trip']) && count($state['trips']) === 0) {
+                $warnings[] = 'Noch keine Fahrt erfasst: Erst eine Kilometerstandsänderung nach Modulstart zählt.';
+            }
+            if (isset($cloudData['warnings']) && is_array($cloudData['warnings'])) {
+                foreach ($cloudData['warnings'] as $warning) {
+                    if (is_string($warning) && $warning !== '') $warnings[] = $warning;
+                }
+            }
+            if ($cloudError !== '') $warnings[] = 'Renault: ' . $cloudError;
+            $this->message($warnings
+                ? implode(' | ', $warnings)
                 : ($cloudData ? 'Renault und lokale Sensoren aktualisiert.' : 'Lokale Sensoren aktualisiert; Renault Cloud nicht angemeldet/ausgeschaltet.'));
             $this->renderDashboard();
             return true;
