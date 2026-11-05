@@ -159,6 +159,17 @@ final class RenaultEVAnalytics
             if ($date === $day) $kmToday += $km;
             if (substr($date, 0, 7) === $month) $kmMonth += $km;
         }
+        // Laufende Fahrten sind noch nicht im Archiv, sollen aber in den
+        // aktuellen Summen sichtbar sein. Nach Fahrtende erfolgt die
+        // Aufnahme ins Archiv; dadurch entsteht keine Doppelzählung.
+        if (is_array($s['trip'])) {
+            $activeKm = max(0.0, (float) ($s['trip']['km'] ?? 0.0));
+            $start = (int) ($s['trip']['startTime'] ?? $now);
+            $kmTotal += $activeKm;
+            if (date('Y-m-d', $start) === $day) $kmToday += $activeKm;
+            if (date('Y-m', $start) === $month) $kmMonth += $activeKm;
+            // Ohne Abschluss-SoC keine belastbare Verbrauchsberechnung.
+        }
         $kwhTotal = 0.0; $costTotal = 0.0; $kwhMonth = 0.0;
         foreach ($s['charges'] as $c) {
             $kwh = (float) ($c['kwh'] ?? 0);
