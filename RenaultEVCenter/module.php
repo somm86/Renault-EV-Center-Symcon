@@ -1,5 +1,5 @@
 <?php
-/** Renault EV Center for IP-Symcon – read-only prototype v0.1.0 */
+/** Renault EV Center for IP-Symcon – read-only prototype v0.1.1 */
 declare(strict_types=1);
 require_once __DIR__ . '/../libs/RenaultApiClient.php';
 require_once __DIR__ . '/../libs/Analytics.php';
@@ -112,30 +112,30 @@ class RenaultEVCenter extends IPSModule
                 ['type' => 'ValidationTextBox', 'name' => 'TfaEmailID', 'caption' => '2FA E-Mail-ID (nur bei mehreren Adressen)'],
             ]],
             ['type' => 'ExpansionPanel', 'caption' => 'Vorhandene Fahrzeugvariablen (Fallback / Offline)', 'items' => [
-                ['type' => 'NumberSpinner', 'name' => 'SourceSOC', 'caption' => 'Batteriestand (%) Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'SourceRange', 'caption' => 'Reichweite (km) Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'SourceMileage', 'caption' => 'Kilometerstand (km) Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'SourceCharging', 'caption' => 'Fahrzeug lädt (bool) Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'SourceSOC', 'caption' => 'Batteriestand (%)', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'SourceRange', 'caption' => 'Reichweite (km)', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'SourceMileage', 'caption' => 'Kilometerstand (km)', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'SourceCharging', 'caption' => 'Fahrzeug lädt (bool)', 'validVariableTypes' => [0, 1, 2, 3]],
             ]],
             ['type' => 'ExpansionPanel', 'caption' => 'go-e (ausschließlich Auslesen!)', 'items' => [
-                ['type' => 'NumberSpinner', 'name' => 'GoEChargingVar', 'caption' => 'go-e Ladestatus Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'GoEChargingVar', 'caption' => 'go-e Ladestatus', 'validVariableTypes' => [0, 1, 2, 3]],
                 ['type' => 'CheckBox', 'name' => 'GoEStateIsCarState', 'caption' => 'Ladestatus ist go-e car state (2 = lädt)'],
-                ['type' => 'NumberSpinner', 'name' => 'GoEPowerVar', 'caption' => 'Ladeleistung Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'GoEPowerVar', 'caption' => 'Ladeleistung', 'validVariableTypes' => [1, 2]],
                 ['type' => 'Select', 'name' => 'GoEPowerUnit', 'caption' => 'Leistungseinheit', 'options' => [
                     ['caption' => 'W', 'value' => 'W'], ['caption' => 'kW', 'value' => 'kW'],
                 ]],
-                ['type' => 'NumberSpinner', 'name' => 'GoESessionKwhVar', 'caption' => 'Ladeenergie laufende Session Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'GoETotalKwhVar', 'caption' => 'Ladeenergie Gesamtzähler Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'GoESessionKwhVar', 'caption' => 'Ladeenergie laufende Session', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'GoETotalKwhVar', 'caption' => 'Ladeenergie Gesamtzähler', 'validVariableTypes' => [1, 2]],
                 ['type' => 'Select', 'name' => 'GoEEnergyUnit', 'caption' => 'Einheit Energiezähler', 'options' => [
                     ['caption' => 'kWh', 'value' => 'kWh'], ['caption' => 'Wh', 'value' => 'Wh'],
                 ]],
             ]],
             ['type' => 'ExpansionPanel', 'caption' => 'SolarEdge (ausschließlich Auslesen!)', 'items' => [
-                ['type' => 'NumberSpinner', 'name' => 'SolarPVVar', 'caption' => 'PV-Leistung Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'SolarGridVar', 'caption' => 'Netzleistung Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'SolarPVVar', 'caption' => 'PV-Leistung', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'SolarGridVar', 'caption' => 'Netzleistung', 'validVariableTypes' => [1, 2]],
                 ['type' => 'CheckBox', 'name' => 'GridPositiveImport', 'caption' => 'Netzleistung: positives Vorzeichen = Netzbezug'],
-                ['type' => 'NumberSpinner', 'name' => 'SolarBatterySOCVar', 'caption' => 'Speicher SOC (%) Variablen-ID', 'minimum' => 0],
-                ['type' => 'NumberSpinner', 'name' => 'SolarBatteryPowerVar', 'caption' => 'Speicherleistung Variablen-ID', 'minimum' => 0],
+                ['type' => 'SelectVariable', 'name' => 'SolarBatterySOCVar', 'caption' => 'Speicher SOC (%)', 'validVariableTypes' => [1, 2]],
+                ['type' => 'SelectVariable', 'name' => 'SolarBatteryPowerVar', 'caption' => 'Speicherleistung', 'validVariableTypes' => [1, 2]],
                 ['type' => 'Select', 'name' => 'SolarPowerUnit', 'caption' => 'Leistungseinheit', 'options' => [
                     ['caption' => 'W', 'value' => 'W'], ['caption' => 'kW', 'value' => 'kW'],
                 ]],
