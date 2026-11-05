@@ -3,11 +3,7 @@
   "name": "Renault EV Center",
   "type": 3,
   "vendor": "Renault",
-  "aliases": [
-    "Renault EV Center Symcon",
-    "Megane E-Tech",
-    "Renault EV Monitoring"
-  ],
+  "aliases": [],
   "parentRequirements": [],
   "childRequirements": [],
   "implemented": [],
