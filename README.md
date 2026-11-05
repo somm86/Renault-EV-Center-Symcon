@@ -1,6 +1,6 @@
 # Renault EV Center für IP-Symcon
 
-**Version 0.1.0 (erste technische Testversion)** – Renault Megane E-Tech und andere Renault EV, *ohne Home Assistant*.  
+**Version 0.1.1 (technische Testversion)** – Renault Megane E-Tech und andere Renault EV, *ohne Home Assistant*.  
 **Ausschließlich Daten lesen und Statistiken bilden.** Es gibt **keine Ladefunktion, keine Ladeautomatik und keinen Fahrzeug- oder Wallbox-Steuerbefehl**.
 
 > Status: Das Modul ist in seiner Ordner-/JSON-Struktur vorbereitet, mit PHP 8.4 syntaktisch geprüft und per Stub/Simulator getestet. **Noch nicht mit einer realen IP-Symcon-Installation, einem Renault-Konto oder der echten Renault Cloud verifiziert.** Besonders der Zugang zu Renaults nichtöffentlichen APIs kann sich ändern, bei MFA oder Fahrzeugverträgen können Einschränkungen auftreten. Dies ist bewusst **keine produktiv validierte 1.0-Version**.
@@ -49,11 +49,11 @@
 
 ### 2. Bestehende Renault-Variablen
 
-Bei `SourceSOC`, `SourceRange`, `SourceMileage`, `SourceCharging` optional die IDs anderer Symcon-Variablen zuordnen. Gemappte Werte haben Vorrang gegenüber Cloudwerten. So lässt sich die Statistik auch **ohne Login** lokal testen.
+Bei `SourceSOC`, `SourceRange`, `SourceMileage`, `SourceCharging` optional vorhandene Symcon-Variablen über **Auswählen (Baumstruktur)** zuordnen. Es muss keine ID mehr manuell eingegeben werden. Gemappte Werte haben Vorrang gegenüber Cloudwerten. So lässt sich die Statistik auch **ohne Login** lokal testen.
 
 ### 3. go-e Charger
 
-Im Abschnitt **go-e (ausschließlich Auslesen)** die vorhandenen Variablen-IDs eintragen:
+Im Abschnitt **go-e (ausschließlich Auslesen)** die vorhandenen Variablen direkt über den **Symcon-Variablenbaum** auswählen:
 
 | Eingabe | Bedeutung |
 |---|---|
@@ -67,7 +67,7 @@ Anfang und Ende einer Ladesitzung werden aus Statuswechseln erkannt. Priorität 
 
 ### 4. SolarEdge
 
-`SolarPVVar`, `SolarGridVar`, `SolarBatterySOCVar`, `SolarBatteryPowerVar` mit den IDs der bestehenden Modbus-Variablen füllen, Einheit W/kW richtig setzen. `GridPositiveImport` legt das Vorzeichen für den Netzbezug fest. Es werden **nur Anzeigen** erzeugt – keine Register beschrieben, kein Remote Control aktiviert.
+`SolarPVVar`, `SolarGridVar`, `SolarBatterySOCVar`, `SolarBatteryPowerVar` über den **Symcon-Variablenbaum** mit den bestehenden Modbus-Variablen verknüpfen, Einheit W/kW richtig setzen. `GridPositiveImport` legt das Vorzeichen für den Netzbezug fest. Es werden **nur Anzeigen** erzeugt – keine Register beschrieben, kein Remote Control aktiviert.
 
 ### 5. Statistik
 
@@ -100,4 +100,4 @@ Fachliche Grundlage und Funktionsideen stammen aus dem Originalprojekt [Redrex85
 - Die API-Nutzung erfolgt über inoffizielle bzw. nicht für dieses Modul garantierte Schnittstellen; Renault kann Versionen, Anforderungen, Zugriffsrechte und API-Schlüssel ändern.
 - Fehlermeldungen sind unter `Message` sichtbar, `CloudConnected = false` bedeutet, dass die letzte Cloud-Abfrage nicht erfolgreich war.
 
-**Freigabestatus:** `v0.1.0 test/beta` – vor Einsatz am echten Fahrzeug überprüfen. Ein offizieller Eintrag im IP-Symcon Module Store existiert nicht.
+**Freigabestatus:** `v0.1.1 test/beta` – vor Einsatz am echten Fahrzeug überprüfen. Ein offizieller Eintrag im IP-Symcon Module Store existiert nicht.
