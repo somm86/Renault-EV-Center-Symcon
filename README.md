@@ -1,9 +1,15 @@
 # Renault EV Center für IP-Symcon
 
-**Version 0.1.1 (technische Testversion)** – Renault Megane E-Tech und andere Renault EV, *ohne Home Assistant*.  
+**Version 0.1.4 (technische Testversion)** – Renault Megane E-Tech und andere Renault EV, *ohne Home Assistant*.  
 **Ausschließlich Daten lesen und Statistiken bilden.** Es gibt **keine Ladefunktion, keine Ladeautomatik und keinen Fahrzeug- oder Wallbox-Steuerbefehl**.
 
 > Status: Das Modul ist in seiner Ordner-/JSON-Struktur vorbereitet, mit PHP 8.4 syntaktisch geprüft und per Stub/Simulator getestet. **Noch nicht mit einer realen IP-Symcon-Installation, einem Renault-Konto oder der echten Renault Cloud verifiziert.** Besonders der Zugang zu Renaults nichtöffentlichen APIs kann sich ändern, bei MFA oder Fahrzeugverträgen können Einschränkungen auftreten. Dies ist bewusst **keine produktiv validierte 1.0-Version**.
+
+## Fehlerbehebung v0.1.4
+
+- Batteriestand bleibt eine Float-Variable; die bisher unpassende Zuordnung zum Integer-Standardprofil `~Battery.100` wurde durch das kompatible Float-Profil `REVC.BatteryPercent` ersetzt.
+- Zur Übernahme des neuen Profils in IP-Symcon Modul aktualisieren und in der Instanz **Übernehmen** klicken. Die Variable wird nicht gelöscht, das Ident bleibt erhalten.
+- Bei bereits manuell eingestellter **benutzerdefinierter Darstellung** kann diese das Profil übersteuern; gegebenenfalls in der Variable die Darstellung prüfen.
 
 ## Inhalte
 
