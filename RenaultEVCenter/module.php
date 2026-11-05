@@ -1,5 +1,5 @@
 <?php
-/** Renault EV Center for IP-Symcon – read-only prototype v0.1.1 */
+/** Renault EV Center for IP-Symcon – read-only prototype v0.1.4 */
 declare(strict_types=1);
 require_once __DIR__ . '/../libs/RenaultApiClient.php';
 require_once __DIR__ . '/../libs/Analytics.php';
@@ -42,8 +42,18 @@ class RenaultEVCenter extends IPSModule
     public function ApplyChanges()
     {
         parent::ApplyChanges();
+        // ~Battery.100 is an INTEGER standard profile, so it must never
+        // be assigned to our FLOAT battery variable. Keep the existing
+        // variable/Ident and use a correctly typed custom percent profile.
+        $batteryProfile = 'REVC.BatteryPercent';
+        if (!IPS_VariableProfileExists($batteryProfile)) {
+            IPS_CreateVariableProfile($batteryProfile, 2); // Float
+            IPS_SetVariableProfileValues($batteryProfile, 0, 100, 1);
+            IPS_SetVariableProfileDigits($batteryProfile, 0);
+            IPS_SetVariableProfileText($batteryProfile, '', ' %');
+        }
         $variables = [
-            ['BatteryLevel', 'Batteriestand', 'float', '~Battery.100'],
+            ['BatteryLevel', 'Batteriestand', 'float', 'REVC.BatteryPercent'],
             ['BatteryAutonomy', 'Reichweite (km)', 'float', ''],
             ['BatteryEnergy', 'Geschätzte Batterieenergie (kWh)', 'float', ''],
             ['Odometer', 'Kilometerstand (km)', 'float', ''],
