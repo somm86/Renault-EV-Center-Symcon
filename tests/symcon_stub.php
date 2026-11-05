@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 $inputs = [1001 => 71.0, 1002 => 27000.5, 1003 => true, 1004 => 11300.0, 1005 => 500000.0, 1006 => 7200.0];
+$profiles=[];
+function IPS_VariableProfileExists(string $name): bool { global $profiles; return isset($profiles[$name]); }
+function IPS_CreateVariableProfile(string $name, int $type): bool { global $profiles; $profiles[$name]=['type'=>$type]; return true; }
+function IPS_SetVariableProfileValues(string $name, float $min, float $max, float $step): bool { return true; }
+function IPS_SetVariableProfileDigits(string $name, int $digits): bool { return true; }
+function IPS_SetVariableProfileText(string $name, string $prefix, string $suffix): bool { return true; }
 function IPS_SemaphoreEnter(string $k,int $t): bool {return true;}
 function IPS_SemaphoreLeave(string $k): void {}
 function IPS_VariableExists(int $id): bool {global $inputs;return array_key_exists($id,$inputs);}
@@ -49,6 +55,8 @@ $module->config('GoEPowerVar',1004);
 $module->config('GoETotalKwhVar',1005);
 $module->config('SolarPVVar',1006);
 $module->ApplyChanges();
+if (($profiles['REVC.BatteryPercent']['type'] ?? null) !== 2) throw new RuntimeException('Wrong battery percentage profile type');
+
 $form=json_decode($module->GetConfigurationForm(),true);
 if (!is_array($form) || !isset($form['elements'],$form['actions'])) throw new RuntimeException('Invalid configuration form');
 if (!$module->Update()) throw new RuntimeException('Update failed: '.$module->getTestValue('Message'));
