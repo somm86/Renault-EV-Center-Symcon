@@ -150,10 +150,11 @@ final class RenaultEVAnalytics
         $s = self::normalize($s);
         $day = date('Y-m-d', $now);
         $month = date('Y-m', $now);
-        $kmToday = 0.0; $kmMonth = 0.0; $kmTotal = 0.0; $tripEnergy = 0.0;
+        $kmToday = 0.0; $kmMonth = 0.0; $kmTotal = 0.0; $kmFinished = 0.0; $tripEnergy = 0.0;
         foreach ($s['trips'] as $t) {
             $km = (float) ($t['km'] ?? 0);
             $kmTotal += $km;
+            $kmFinished += $km;
             $tripEnergy += (float) ($t['kwhEstimated'] ?? 0);
             $date = date('Y-m-d', (int) ($t['endTime'] ?? 0));
             if ($date === $day) $kmToday += $km;
@@ -181,7 +182,7 @@ final class RenaultEVAnalytics
         return [
             'kmToday' => round($kmToday, 2), 'kmMonth' => round($kmMonth, 2),
             'kmRecorded' => round($kmTotal, 2), 'tripCount' => count($s['trips']),
-            'tripKwh100Estimated' => $kmTotal > 0 ? round($tripEnergy / $kmTotal * 100, 2) : 0.0,
+            'tripKwh100Estimated' => $kmFinished > 0 ? round($tripEnergy / $kmFinished * 100, 2) : 0.0,
             'chargeCount' => count($s['charges']), 'chargedTotalKwh' => round($kwhTotal, 3),
             'chargedMonthKwh' => round($kwhMonth, 3), 'chargeCostTotalEUR' => round($costTotal, 2),
             'lastTripKM' => (float) ($lastTrip['km'] ?? 0),
